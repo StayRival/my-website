@@ -29,20 +29,24 @@
       transform: translate(-50%, -50%);
       width: 90%;
       max-width: 800px;
-      max-height: 80vh;
-      overflow-y: auto;
+      height: 80vh;
       text-align: left;
       z-index: 1;
       padding: 20px;
       box-sizing: border-box;
+      overflow: hidden;
     }
     .slide {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
+      height: 100%;
       opacity: 0;
       transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     .slide.active {
       opacity: 1;
