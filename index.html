@@ -13,10 +13,13 @@
       color: #fff;
       font-family: 'Arial', sans-serif;
     }
-    canvas {
+    .gradient-bg {
       position: absolute;
       top: 0;
       left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
       z-index: -1;
     }
     .slides-container {
@@ -92,7 +95,7 @@
   </style>
 </head>
 <body>
-  <canvas id="bg"></canvas>
+  <div class="gradient-bg"></div>
   <div class="slides-container">
     <!-- Slide 1: About Me -->
     <div class="slide active" id="slide1">
@@ -129,38 +132,8 @@
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
   <script>
-    // Three.js Background: Sleek Particle System
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg'), antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-    // Add particles
-    const particleGeometry = new THREE.BufferGeometry();
-    const particleCount = 5000;
-    const particlePositions = new Float32Array(particleCount * 3);
-    for (let i = 0; i < particleCount * 3; i++) {
-      particlePositions[i] = (Math.random() - 0.5) * 1000;
-    }
-    particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-
-    const particleMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 });
-    const particles = new THREE.Points(particleGeometry, particleMaterial);
-    scene.add(particles);
-
-    camera.position.z = 5;
-
-    function animate() {
-      requestAnimationFrame(animate);
-      particles.rotation.x += 0.0005;
-      particles.rotation.y += 0.0005;
-      renderer.render(scene, camera);
-    }
-    animate();
-
     // Slide Logic
     let currentSlide = 0;
     const slides = document.querySelectorAll('.slide');
