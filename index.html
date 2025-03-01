@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Slide Bio</title>
+  <title>Ultimate Web Bio</title>
   <style>
     body, html {
       margin: 0;
@@ -25,17 +25,27 @@
       left: 50%;
       transform: translate(-50%, -50%);
       width: 80%;
-      max-width: 600px;
+      max-width: 800px;
       text-align: center;
       z-index: 1;
     }
     .slide {
-      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
       opacity: 0;
+      transition: opacity 1s ease-in-out, transform 1s ease-in-out;
     }
     .slide.active {
-      display: block;
       opacity: 1;
+      transform: translateY(0);
+    }
+    .slide.next {
+      transform: translateY(100%);
+    }
+    .slide.prev {
+      transform: translateY(-100%);
     }
     h1 {
       font-size: 3rem;
@@ -52,22 +62,35 @@
       font-size: 1.5rem;
       margin-top: 20px;
     }
-    .nav-buttons {
-      margin-top: 30px;
+    .nav-dots {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
     }
-    .nav-button {
-      padding: 10px 20px;
-      background: linear-gradient(90deg, #00ffcc, #ff00ff);
-      border: none;
-      color: #000;
-      font-size: 1rem;
+    .nav-dot {
+      width: 10px;
+      height: 10px;
+      background: #555;
+      border-radius: 50%;
       cursor: pointer;
-      border-radius: 50px;
-      margin: 0 10px;
-      transition: transform 0.3s ease;
+      transition: background 0.3s ease;
     }
-    .nav-button:hover {
-      transform: scale(1.1);
+    .nav-dot.active {
+      background: #00ffcc;
+    }
+    .typing-effect {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid #00ffcc;
+      animation: blink-caret 0.75s step-end infinite;
+    }
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: #00ffcc; }
     }
   </style>
 </head>
@@ -77,60 +100,81 @@
     <!-- Slide 1: Age -->
     <div class="slide active" id="slide1">
       <h1>My Age</h1>
-      <p>I am <span id="age">[Your Age]</span> years old.</p>
+      <p><span class="typing-effect">I am 20 years old.</span></p>
     </div>
     <!-- Slide 2: School -->
     <div class="slide" id="slide2">
       <h1>My School</h1>
-      <p>I study at <span id="school">[Your School]</span>.</p>
+      <p><span class="typing-effect">I study at Future University.</span></p>
     </div>
     <!-- Slide 3: Languages -->
     <div class="slide" id="slide3">
       <h1>My Languages</h1>
-      <p>I speak <span id="languages">[Your Languages]</span>.</p>
+      <p><span class="typing-effect">I speak English, Spanish, and French.</span></p>
     </div>
     <!-- Slide 4: Skills -->
     <div class="slide" id="slide4">
       <h1>My Skills</h1>
-      <p>I am skilled in <span id="skills">[Your Skills]</span>.</p>
+      <p><span class="typing-effect">I am skilled in Coding, Design, and Writing.</span></p>
     </div>
-    <!-- Navigation Buttons -->
-    <div class="nav-buttons">
-      <button class="nav-button" onclick="prevSlide()">Previous</button>
-      <button class="nav-button" onclick="nextSlide()">Next</button>
+    <!-- Slide 5: Hobbies -->
+    <div class="slide" id="slide5">
+      <h1>My Hobbies</h1>
+      <p><span class="typing-effect">I love gaming, coding, and exploring new tech.</span></p>
+    </div>
+    <!-- Slide 6: Achievements -->
+    <div class="slide" id="slide6">
+      <h1>My Achievements</h1>
+      <p><span class="typing-effect">I built this insane bio and won multiple hackathons.</span></p>
+    </div>
+    <!-- Navigation Dots -->
+    <div class="nav-dots">
+      <div class="nav-dot active" onclick="goToSlide(0)"></div>
+      <div class="nav-dot" onclick="goToSlide(1)"></div>
+      <div class="nav-dot" onclick="goToSlide(2)"></div>
+      <div class="nav-dot" onclick="goToSlide(3)"></div>
+      <div class="nav-dot" onclick="goToSlide(4)"></div>
+      <div class="nav-dot" onclick="goToSlide(5)"></div>
     </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
   <script>
-    // Three.js Particle System
+    // Three.js Galaxy Background
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg'), antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 5000;
-    const posArray = new Float32Array(particlesCount * 3);
-    for (let i = 0; i < particlesCount * 3; i++) {
-      posArray[i] = (Math.random() - 0.5) * 10;
+    // Add stars
+    const starGeometry = new THREE.BufferGeometry();
+    const starCount = 5000;
+    const starPositions = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount * 3; i++) {
+      starPositions[i] = (Math.random() - 0.5) * 1000;
     }
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
 
-    const particlesMaterial = new THREE.PointsMaterial({
-      size: 0.01,
-      color: '#00ffcc',
-    });
-    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-    scene.add(particlesMesh);
+    const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 });
+    const stars = new THREE.Points(starGeometry, starMaterial);
+    scene.add(stars);
+
+    // Add a planet
+    const planetGeometry = new THREE.SphereGeometry(2, 32, 32);
+    const planetMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffcc, wireframe: true });
+    const planet = new THREE.Mesh(planetGeometry, planetMaterial);
+    planet.position.set(10, 0, -50);
+    scene.add(planet);
 
     camera.position.z = 5;
 
     function animate() {
       requestAnimationFrame(animate);
-      particlesMesh.rotation.x += 0.001;
-      particlesMesh.rotation.y += 0.001;
+      stars.rotation.x += 0.0005;
+      stars.rotation.y += 0.0005;
+      planet.rotation.x += 0.01;
+      planet.rotation.y += 0.01;
       renderer.render(scene, camera);
     }
     animate();
@@ -138,15 +182,35 @@
     // Slide Logic
     let currentSlide = 0;
     const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.nav-dot');
 
     function showSlide(index) {
       slides.forEach((slide, i) => {
         if (i === index) {
-          gsap.to(slide, { opacity: 1, display: 'block', duration: 0.5 });
+          slide.classList.add('active');
+          slide.classList.remove('next', 'prev');
         } else {
-          gsap.to(slide, { opacity: 0, display: 'none', duration: 0.5 });
+          slide.classList.remove('active');
+          if (i < index) slide.classList.add('prev');
+          else slide.classList.add('next');
         }
       });
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+
+      // Trigger typing effect
+      const typingText = slides[index].querySelector('.typing-effect');
+      typingText.style.animation = 'none';
+      setTimeout(() => {
+        typingText.style.animation = '';
+      }, 10);
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      showSlide(currentSlide);
     }
 
     function nextSlide() {
@@ -162,11 +226,8 @@
     // Initialize first slide
     showSlide(currentSlide);
 
-    // Add your personal info here
-    document.getElementById('age').textContent = '20'; // Replace with your age
-    document.getElementById('school').textContent = 'Future University'; // Replace with your school
-    document.getElementById('languages').textContent = 'English, Spanish, French'; // Replace with your languages
-    document.getElementById('skills').textContent = 'Coding, Design, Writing'; // Replace with your skills
+    // Auto-advance slides (optional)
+    setInterval(nextSlide, 5000);
   </script>
 </body>
 </html>
