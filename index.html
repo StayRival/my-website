@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Neural Bio</title>
+  <title>Interactive Slide Bio</title>
   <style>
     body, html {
       margin: 0;
@@ -19,16 +19,26 @@
       left: 0;
       z-index: -1;
     }
-    .content {
+    .slides-container {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      width: 80%;
+      max-width: 600px;
       text-align: center;
       z-index: 1;
     }
+    .slide {
+      display: none;
+      opacity: 0;
+    }
+    .slide.active {
+      display: block;
+      opacity: 1;
+    }
     h1 {
-      font-size: 4rem;
+      font-size: 3rem;
       background: linear-gradient(90deg, #00ffcc, #ff00ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -42,28 +52,53 @@
       font-size: 1.5rem;
       margin-top: 20px;
     }
-    .voice-button {
+    .nav-buttons {
       margin-top: 30px;
-      padding: 15px 30px;
+    }
+    .nav-button {
+      padding: 10px 20px;
       background: linear-gradient(90deg, #00ffcc, #ff00ff);
       border: none;
       color: #000;
-      font-size: 1.2rem;
+      font-size: 1rem;
       cursor: pointer;
       border-radius: 50px;
+      margin: 0 10px;
       transition: transform 0.3s ease;
     }
-    .voice-button:hover {
+    .nav-button:hover {
       transform: scale(1.1);
     }
   </style>
 </head>
 <body>
   <canvas id="bg"></canvas>
-  <div class="content">
-    <h1>Welcome to My Neural Bio</h1>
-    <p>I am a fusion of creativity and technology, designed to inspire.</p>
-    <button class="voice-button" onclick="startVoiceInteraction()">Talk to Me</button>
+  <div class="slides-container">
+    <!-- Slide 1: Age -->
+    <div class="slide active" id="slide1">
+      <h1>My Age</h1>
+      <p>I am <span id="age">[Your Age]</span> years old.</p>
+    </div>
+    <!-- Slide 2: School -->
+    <div class="slide" id="slide2">
+      <h1>My School</h1>
+      <p>I study at <span id="school">[Your School]</span>.</p>
+    </div>
+    <!-- Slide 3: Languages -->
+    <div class="slide" id="slide3">
+      <h1>My Languages</h1>
+      <p>I speak <span id="languages">[Your Languages]</span>.</p>
+    </div>
+    <!-- Slide 4: Skills -->
+    <div class="slide" id="slide4">
+      <h1>My Skills</h1>
+      <p>I am skilled in <span id="skills">[Your Skills]</span>.</p>
+    </div>
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+      <button class="nav-button" onclick="prevSlide()">Previous</button>
+      <button class="nav-button" onclick="nextSlide()">Next</button>
+    </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -100,25 +135,38 @@
     }
     animate();
 
-    // GSAP Animations
-    gsap.from('h1', { duration: 2, opacity: 0, y: -50, ease: 'power3.out' });
-    gsap.from('p', { duration: 2, opacity: 0, y: 50, delay: 1, ease: 'power3.out' });
-    gsap.from('.voice-button', { duration: 2, opacity: 0, y: 50, delay: 1.5, ease: 'power3.out' });
+    // Slide Logic
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
 
-    // Voice Interaction
-    function startVoiceInteraction() {
-      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-      recognition.lang = 'en-US';
-      recognition.start();
-
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        alert(`You said: ${transcript}`);
-        // Add AI response logic here (e.g., call OpenAI API)
-      };
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        if (i === index) {
+          gsap.to(slide, { opacity: 1, display: 'block', duration: 0.5 });
+        } else {
+          gsap.to(slide, { opacity: 0, display: 'none', duration: 0.5 });
+        }
+      });
     }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(currentSlide);
+    }
+
+    // Initialize first slide
+    showSlide(currentSlide);
+
+    // Add your personal info here
+    document.getElementById('age').textContent = '20'; // Replace with your age
+    document.getElementById('school').textContent = 'Future University'; // Replace with your school
+    document.getElementById('languages').textContent = 'English, Spanish, French'; // Replace with your languages
+    document.getElementById('skills').textContent = 'Coding, Design, Writing'; // Replace with your skills
   </script>
-</body>
-</html>
 </body>
 </html>
