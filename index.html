@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Omar Guessme - Portfolio</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: #0a0a0a;
+        color: #ffffff;
+        font-family: "Inter", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+        flex-direction: column;
+        padding: 20px;
+      }
+      .container {
+        max-width: 600px;
+        padding: 40px;
+        background: rgba(20, 20, 20, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 255, 170, 0.5);
+        backdrop-filter: blur(10px);
+        animation: fadeIn 1.5s ease-in-out;
+      }
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #00ffaa, #00ccff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: glow 1.5s infinite alternate;
+      }
+      p {
+        font-size: 1.1rem;
+        margin-top: 10px;
+        opacity: 0.85;
+      }
+      .section {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        transition: 0.3s;
+      }
+      .section:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: scale(1.05);
+      }
+      a {
+        color: #00ffaa;
+        text-decoration: none;
+        font-weight: 700;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes glow {
+        from {
+          text-shadow: 0 0 10px #00ffaa;
+        }
+        to {
+          text-shadow: 0 0 20px #00ffaa, 0 0 30px #00ccff;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Omar Guessme</h1>
+      <p>Algorithm Enthusiast | Software Developer | Cybersecurity Explorer</p>
+
+      <div class="section">
+        <h2>👨‍💻 About Me</h2>
+        <p>
+          Passionate about solving complex problems with clean, efficient code.
+          Always learning, always building.
+        </p>
+      </div>
+
+      <div class="section">
+        <h2>⚡ Skills</h2>
+        <p>Python, C++, Web Development, Algorithms, Linux, Ethical Hacking</p>
+      </div>
+
+      <div class="section">
+        <h2>📩 Contact</h2>
+        <p>Reach out: <a href="mailto:omar@example.com">omar@example.com</a></p>
+      </div>
+    </div>
+  </body>
+</html>
